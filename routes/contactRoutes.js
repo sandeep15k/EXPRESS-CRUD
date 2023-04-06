@@ -5,8 +5,11 @@ const router = express.Router()
  const {updateContact} = require("../controllers/myContactController")
  const {getContactbyId} = require("../controllers/myContactController")
  const {deleteContact} = require("../controllers/myContactController")
+const validateToken = require("../middleware/validateTokenHandler")
 
-router.route("/").get(getContacts).post(createContact)
+
+router.use(validateToken)
+router.route("/").get(getContacts).post(createContact) //here we have to use validate token in all the routes so we have used router.use()
 
 // router.route("/").post(createContact)
 

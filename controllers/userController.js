@@ -55,7 +55,7 @@ const loginUser = asyncHandler(async (req,res )=>{
             id : user.id
         }
     },process.env.ACCESS_TOKEN_SECRET,
-    {expiresIn:"2m"}
+    {expiresIn:"60m"}
     )
      res.status(200).json({accessToken})  
     }
@@ -67,7 +67,7 @@ const loginUser = asyncHandler(async (req,res )=>{
 })
 
 const currentUser = asyncHandler(async (req,res )=>{
-    res.json({message: "Current user"})
+    res.json(req.data)     // thid res.data is what we have defined in validationTokenHandler.js 
 })
 
 

@@ -12,7 +12,12 @@ if (authheader || authheader.startsWith("Bearer")) {
             res.status(401)
             throw new Error("User is not authorized")
         }
-        console.log(decoded);
+        req.data = decoded.user   // data is not specified yet just storing the user info in req.data   
+        next();
+        if (!token) {
+            res.status(401)
+            throw new Error("User is not authorized or token is missing")
+        }
     })
 }
 

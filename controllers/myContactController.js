@@ -6,7 +6,7 @@ const asyncHandler = require("express-async-handler")
 //@route GET /api/contacts
 //@access public 
 const getContacts = asyncHandler(async (req,res)=>{
-    const contact = await Contacts.find()
+    const contact = await Contacts.find({user_id: req.data.id})
     res.status(200).json(contact)
 })
 
@@ -38,6 +38,7 @@ const createContact = asyncHandler(async (req,res)=>{
     }
     const contact = await Contacts.create(
         {
+         user_id:req.data.id,
          name,
          email,
          phone_no  
@@ -56,6 +57,11 @@ const updateContact = asyncHandler(async (req,res)=>{
         res.status(404)
         throw new Error("Contact not found")
     }
+    
+    if (contact.user_id.toString()!= req.data.id) {
+        res.status(403)
+        throw new Error("User don't have permission to update other user contacts")
+    }
     const updatedContact = await Contacts.findByIdAndUpdate( 
         req.params.id,
         req.body,
@@ -73,6 +79,10 @@ const deleteContact = asyncHandler(async (req,res)=>{
     if (!contact) {
         res.status(404)
         throw new Error("Contact not found")
+    }
+    if (contact.user_id.toString()!= req.data.id ) {
+        res.status(403)
+        throw new Error("User don't have permission to delete other user contacts")
     }
     const deletedContact = await Contacts.findByIdAndDelete(req.params.id)
     res.status(200).json(deletedContact)
